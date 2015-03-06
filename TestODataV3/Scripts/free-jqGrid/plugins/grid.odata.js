@@ -162,7 +162,7 @@
                 }
 
                 if (!postData._search) { return params; }
-            
+
                 // complex searching, with a groupOp.  This is for if we enable the form for multiple selection criteria.
                 if (postData.filters) {
                     var filterGroup = $.parseJSON(postData.filters);
@@ -357,9 +357,9 @@
             var $t = this[0], p = $t.p, $self = $($t);
 
             var o = $.extend(true, {
-                parsecolfunc: null, 
-                parsemetadatafunc: null, 
-                successfunc: null, 
+                parsecolfunc: null,
+                parsemetadatafunc: null,
+                successfunc: null,
                 errorfunc: null,
                 metadataurl: p.url + '/$metadata',
                 async: false
@@ -382,8 +382,8 @@
                     var props = $('EntityType[Name!="Default"] Property', data);
                     var keys = $('EntityType[Name!="Default"] Key PropertyRef', data);
                     if (props.length > 0) {
-                        var key = keys.length>0 ? keys.first().attr('Name') : '';
-                        
+                        var key = keys.length > 0 ? keys.first().attr('Name') : '';
+
                         var cols = [];
                         props.each(function (n, itm) {
                             var name = $(itm).attr('Name');
