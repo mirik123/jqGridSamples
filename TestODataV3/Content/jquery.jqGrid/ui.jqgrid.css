@@ -171,10 +171,12 @@
 	-ms-user-select: none;
 	-moz-user-select: -moz-none;
 	-webkit-user-select: none;
+	-o-user-select: none;
 	user-select: none;
 	display: inline;
 	overflow: hidden;
 }
+
 .ui-jqgrid .ui-grid-ico-sort {
 	overflow: hidden;
 	position: absolute;
@@ -325,6 +327,7 @@
 	-ms-user-select: none;
 	-moz-user-select: -moz-none;
 	-webkit-user-select: none;
+	-o-user-select: none;
 	user-select: none;
 	position: absolute;
 	top: 0;
@@ -334,6 +337,7 @@
 	border: 0 none;
 	z-index: 99999;
 }
+
 span.ui-jqgrid-cell-wrapper {
 	margin: 0 !important;
 	padding: 0 !important;
@@ -502,7 +506,7 @@ span.ui-jqgrid-cell-wrapper {
 }
 .ui-jqgrid .ui-pg-table .ui-pg-button.ui-state-disabled:hover > .ui-separator {
 	margin: -1px 1px;
-	padding: 0 0px;
+	padding: 0 0;
 }
 .ui-jqgrid .ui-pg-table .ui-pg-button {
 	margin: 2px;
@@ -745,6 +749,8 @@ span.ui-jqgrid-cell-wrapper {
 
 /* inline edit actions button*/
 .ui-jqgrid  .jqgrow .ui-jqgrid-actions {
+	display: inline-block;
+	vertical-align: middle;
 	margin: 0;
 }
 .ui-jqgrid  .jqgrow  .ui-jqgrid-actions > .ui-pg-div.ui-state-hover {
@@ -755,7 +761,6 @@ span.ui-jqgrid-cell-wrapper {
 	float: left;
 	margin: 0 1px;
 }
-
 /* Tree Grid */
 .ui-jqgrid .tree-wrap {
 	float: left;
@@ -841,6 +846,7 @@ span.ui-jqgrid-cell-wrapper {
 	padding-left: 0;
 }
 .ui-search-menu.ui-menu .ui-menu-item a {
+	text-decoration: none;
 	display: block;
 }
 .ui-search-menu.ui-menu .ui-menu-item a.g-menu-item:hover {
@@ -859,6 +865,7 @@ span.ui-jqgrid-cell-wrapper {
 a.g-menu-item,
 a.soptclass,
 a.clearsearchclass {
+	text-decoration: none;
 	cursor: pointer;
 }
 .ui-jqgrid .ui-search-table .ui-search-input > input,
@@ -907,35 +914,46 @@ a.clearsearchclass {
 	padding: 0;
 }
 .jqgrow .ui-pg-div > span.fa {
+	font-weight: normal;
+	font-size: 12px;
+	vertical-align: baseline;
 	background: none;
 	border: 0 none;
 }
 .ui-subgrid > .subgrid-cell span.fa {
+	font-weight: normal;
+	font-size: 12px;
 	text-indent: 0;
 	background: none;
 	border: 0 none;
 	margin-bottom: 4px;
 }
 .jqgrow > .ui-sgcollapsed span.fa {
+	font-weight: normal;
+	font-size: 12px;
 	text-indent: 0;
 	background: none;
 	border: 0 none;
 	margin: 0;
 }
 .ui-jqgrid .ui-resizable-se.fa {
+	-webkit-filter: alpha(opacity=40);
+	-moz-filter: alpha(opacity=40);
+	-o-filter: alpha(opacity=40);
 	filter: alpha(opacity=40);
+	-ms-opacity: 0.4;
 	opacity: 0.4;
 	background: none;
 	border-style: none;
 	right: -3px;
 	font-weight: normal;
 }
+
 .ui-jqgrid-ltr .ui-resizable-se.fa {
 	right: -3px;
 	bottom: 0;
 }
 .ui-jqgrid-rtl .ui-resizable-se.fa {
-	left: 0px;
+	left: 0;
 	bottom: 1px;
 }
-/*left: 0px; bottom: 1px;*/

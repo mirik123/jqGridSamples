@@ -21,8 +21,6 @@ namespace WebApplication2
         public string addr_city { get; set; }
         public string addr_street { get; set; }
         public string addr_home { get; set; }
-        public bool request_exists { get; set; }
-        public bool check_exists { get; set; }
     }
 
     public static class EFRepository

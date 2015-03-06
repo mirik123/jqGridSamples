@@ -44,6 +44,7 @@ namespace WebApplication2.odata
         {
             return Get().Cast<ClientModel>().FirstOrDefault(x => x.id == key);
         }
+
         [HttpPost]
         public IHttpActionResult Post(Client model)
         {
@@ -64,6 +65,7 @@ namespace WebApplication2.odata
         {
             var itm = dbcontext.Client.FirstOrDefault(x => x.Id == key);
             model.Put(itm);
+            
             return itm;
         }
 

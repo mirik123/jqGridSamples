@@ -19,8 +19,6 @@ namespace WebApplication2.odata
         [Queryable(AllowedQueryOptions = AllowedQueryOptions.All, PageSize = 25)]
         public IQueryable<ClientModel> Get() 
         {
-            //dbcontext.Seed(dbcontext);
-            
             var model = dbcontext.Client
                     .Join(dbcontext.ClientStatus, a => a.status, b => b.Id, (a, b) => new { client = a, status = b })
                     .Join(dbcontext.ClientType, a => a.client.cltype, b => b.Id, (a, b) => new { client = a.client, status = a.status, type = b })
