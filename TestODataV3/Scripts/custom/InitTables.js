@@ -115,7 +115,7 @@ $(document).ready(function () {
             mtype: 'GET',
             url: 'http://localhost:59661/api/ApiServices/Get1',
             ondblClickRow: function (id) {
-                $('#grid').jqGrid('editRow', id, {
+                $(this).jqGrid('editRow', id, {
                     beforeEditRow: function (options, rowid) {
                         return true;
                     }
@@ -127,7 +127,7 @@ $(document).ready(function () {
             colModel: colModelDefinition,
             loadError: function (jqXHR, textStatus, errorThrown) {
                 var errstring = loadError(jqXHR, textStatus, errorThrown);
-                $.jgrid.info_dialog.call(this, $this.jqGrid("getGridRes", "errors.errcap"), errstring, $this.jqGrid("getGridRes", "edit.bClose"));
+                $.jgrid.info_dialog.call(this, $(this).jqGrid("getGridRes", "errors.errcap"), errstring, $(this).jqGrid("getGridRes", "edit.bClose"));
             }
         })
         .jqGrid("navGrid", "#pg_grid_toppager", { add: true, del: true, edit: true, view: true, reload: true, search: false, cloneToTop: true },
@@ -196,7 +196,7 @@ $(document).ready(function () {
             toolbar: [true, 'top'],
             url: '',
             ondblClickRow: function (id) {
-                $('#grid').jqGrid('editRow', id, {
+                $(this).jqGrid('editRow', id, {
                     beforeEditRow: function (options, rowid) {
                         return true;
                     }
@@ -208,7 +208,7 @@ $(document).ready(function () {
             colModel: colModelDefinition,
             loadError: function (jqXHR, textStatus, errorThrown) {
                 var errstring = loadError(jqXHR, textStatus, errorThrown);
-                $.jgrid.info_dialog.call(this, $this.jqGrid("getGridRes", "errors.errcap"), errstring, $this.jqGrid("getGridRes", "edit.bClose"));
+                $.jgrid.info_dialog.call(this, $(this).jqGrid("getGridRes", "errors.errcap"), errstring, $(this).jqGrid("getGridRes", "edit.bClose"));
             },
             beforeInitGrid: function () {
                 $(this).jqGrid('odataInit', {
