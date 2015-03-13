@@ -236,10 +236,10 @@
   <ItemGroup>
     <Compile Include="api\ApiServicesController.cs" />
     <Compile Include="api\jqGridExtension.cs" />
-    <Compile Include="App_Start\Client.cs" />
-    <Compile Include="App_Start\ClientStatus.cs" />
-    <Compile Include="App_Start\ClientType.cs" />
-    <Compile Include="App_Start\EFModel.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ClientStatus.cs" />
+    <Compile Include="Models\ClientType.cs" />
+    <Compile Include="Models\EFModel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\GridModels.cs" />
     <Compile Include="odata\jqGridODataHelper.cs" />

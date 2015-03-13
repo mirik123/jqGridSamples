@@ -36,19 +36,21 @@ $(document).ready(function () {
         }
         if (jqXHR.responseJSON) {
             var odataerr = jqXHR.responseJSON["@odata.error"] || jqXHR.responseJSON["odata.error"] || jqXHR.responseJSON["error"];
-            if (odataerr.innererror) {
-                if (odataerr.innererror.internalexception) {
-                    title = odataerr.innererror.internalexception.message;
-                    message = odataerr.innererror.internalexception.stacktrace || '';
+            if (odataerr) {
+                if (odataerr.innererror) {
+                    if (odataerr.innererror.internalexception) {
+                        title = odataerr.innererror.internalexception.message;
+                        message = odataerr.innererror.internalexception.stacktrace || '';
+                    }
+                    else {
+                        title = odataerr.innererror.message;
+                        message = odataerr.innererror.stacktrace || '';
+                    }
                 }
                 else {
-                    title = odataerr.innererror.message;
-                    message = odataerr.innererror.stacktrace || '';
+                    title = odataerr.message.value || odataerr.message;
+                    message = odataerr.stacktrace || '';
                 }
-            }
-            else {
-                title = odataerr.message.value || odataerr.message;
-                message = odataerr.stacktrace || '';
             }
         }
 
@@ -150,8 +152,7 @@ $(document).ready(function () {
     function initODataTable() {
         var colModelDefinition = [
             {
-                label: 'Client Id', name: 'id', index: 'id', editable: false,
-                searchrules: { integer: true }, sorttype: 'number',
+                label: 'Client Id', name: 'id', index: 'id', editable: false, searchrules: { integer: true },
                 formatter: function (cellvalue, options, rowObject) { return '<a href="#" target="_self" data-id="' + rowObject.id + '">' + rowObject.id + '</a>'; },
                 unformat: function (cellvalue, options, cell) { return $('a', cell).data('id'); }
             },         
@@ -214,8 +215,15 @@ $(document).ready(function () {
                 $(this).jqGrid('odataInit', {
                     version: 3,
                     gencolumns: true,
+                    entityType: 'ClientModel',
                     odataurl: "http://localhost:59661/odata/ODClient",
-                    metadataurl: 'http://localhost:59661/odata/$metadata'
+                    metadataurl: 'http://localhost:59661/odata/$metadata',
+                    errorfunc: function (jqXHR, textStatus, errorThrown) {
+                        jqXHR = jqXHR.xhr || jqXHR;
+                        var $this = $("#grid");
+                        var errstring = loadError(jqXHR, textStatus, errorThrown);
+                        $.jgrid.info_dialog.call($this[0], $this.jqGrid("getGridRes", "errors.errcap"), errstring, $this.jqGrid("getGridRes", "edit.bClose"));
+                    }
                 });
             }
         })

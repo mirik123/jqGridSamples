@@ -2,13 +2,13 @@
 // @compilation_level SIMPLE_OPTIMIZATIONS
 
 /**
- * @license jqGrid  4.8.0 - free jqGrid
+ * @license jqGrid  4.8.0-post - free jqGrid
  * Copyright (c) 2008-2014, Tony Tomov, tony@trirand.com
  * Copyright (c) 2014-2015, Oleg Kiriljuk, oleg.kiriljuk@ok-soft-gmbh.com
  * Dual licensed under the MIT and GPL licenses
  * http://www.opensource.org/licenses/mit-license.php
  * http://www.gnu.org/licenses/gpl-2.0.html
- * Date: 2015-03-02
+ * Date: 2015-03-09
  */
 //jsHint options
 /*jshint evil:true, eqeqeq:false, eqnull:true, devel:true */
@@ -4061,7 +4061,7 @@ $.fn.jqGrid = function( pin ) {
 			ptr = $(td,ts.rows).closest("tr.jqgrow");
 			if($(ptr).length === 0 ){return;}
 			ri = ptr[0].rowIndex;
-			ci = getCellIndex(td);
+			ci = getCellIndex($(td).closest("tr.jqgrow>td"));
 			if (!feedback.call(ts, "ondblClickRow", $(ptr).attr("id"), ri, ci, e)) {
 				return false; // e.preventDefault() and e.stopPropagation() together
 			}
@@ -4072,7 +4072,7 @@ $.fn.jqGrid = function( pin ) {
 			if($(ptr).length === 0 ){return;}
 			if(!p.multiselect) {	$(ts).jqGrid("setSelection",ptr[0].id,true,e);	}
 			ri = ptr[0].rowIndex;
-			ci = getCellIndex(td);
+			ci = getCellIndex($(td).closest("tr.jqgrow>td"));
 			if (!feedback.call(ts, "onRightClickRow", $(ptr).attr("id"), ri, ci, e)) {
 				return false; // e.preventDefault() and e.stopPropagation() together
 			}
@@ -4620,7 +4620,7 @@ jgrid.extend({
 	},
 	addRowData : function(rowid,rdata,pos,src) {
 		// TODO: add an additional parameter, which will inform whether the input data rdata is in formatted or unformatted form
-		if($.inArray(pos, ["first", "last", "before", "after"]) < 0) {pos = "last";}
+		if($.inArray(pos, ["first", "last", "before", "after", "afterSelected", "beforeSelected"]) < 0) {pos = "last";}
 		var success = false, nm, row, gi, si, ni,sind, i, v, prp="", aradd, cnm, cn, data, cm, id;
 		if(rdata) {
 			if($.isArray(rdata)) {
@@ -4694,6 +4694,14 @@ jgrid.extend({
 					if(t.rows.length === 0){
 						$("table:first",t.grid.bDiv).append(row);
 					} else {
+						if (pos === "afterSelected" || pos === "beforeSelected") {
+							if (src === undefined && p.selrow !== null) {
+								src = p.selrow;
+								pos = (pos === "afterSelected") ? "after" : "before";
+							} else {
+								pos = (pos === "afterSelected") ? "last" : "first";
+							}
+						}
 						switch (pos) {
 							case 'last':
 								$(t.rows[t.rows.length-1]).after(row);
@@ -6873,7 +6881,8 @@ jgrid.extend({
 	},
 	clearBeforeUnload : function () {
 		return this.each(function(){
-			var self = this, p = self.p, grid = self.grid, propOrMethod, clearArray = jgrid.clearArray;
+			var self = this, p = self.p, grid = self.grid, propOrMethod, clearArray = jgrid.clearArray,
+				hasOwnProperty = Object.prototype.hasOwnProperty;
 			if ($.isFunction(grid.emptyRows)) {
 				grid.emptyRows.call(self, true, true); // this work quick enough and reduce the size of memory leaks if we have someone
 			}
@@ -6919,7 +6928,7 @@ jgrid.extend({
 			var propOrMethods = ['formatCol','sortData','updatepager','refreshIndex','setHeadCheckBox','constructTr','formatter','addXmlData','addJSONData','nav','grid','p'];
 			l = propOrMethods.length;
 			for(i = 0; i < l; i++) {
-				if(self.hasOwnProperty(propOrMethods[i])) {
+				if(hasOwnProperty.call(self, propOrMethods[i])) {
 					self[propOrMethods[i]] = null;
 				}
 			}

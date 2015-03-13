@@ -155,10 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="api\ApiServicesController.cs" />
-    <Compile Include="App_Start\Client.cs" />
-    <Compile Include="App_Start\ClientStatus.cs" />
-    <Compile Include="App_Start\ClientType.cs" />
-    <Compile Include="App_Start\EFModel.cs" />
+    <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\ClientStatus.cs" />
+    <Compile Include="Models\ClientType.cs" />
+    <Compile Include="Models\EFModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

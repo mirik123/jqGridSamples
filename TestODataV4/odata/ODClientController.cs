@@ -42,7 +42,7 @@ namespace WebApplication2.odata
         [HttpGet]
         public ClientModel Get([FromODataUri] int key)
         {
-            return Get().Cast<ClientModel>().FirstOrDefault(x => x.id == key);
+            return Get().FirstOrDefault(x => x.id == key);
         }
 
         [HttpPost]

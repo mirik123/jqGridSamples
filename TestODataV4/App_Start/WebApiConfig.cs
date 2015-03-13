@@ -1,5 +1,6 @@
 ﻿
 using jqGridExtension;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,7 @@ namespace WebApplication2
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling =
-                  Newtonsoft.Json.PreserveReferencesHandling.None;
+            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.All;
 
             ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
             builder.EntitySet<ClientModel>("ODClient").EntityType.HasKey(x => x.id);
