@@ -18,7 +18,7 @@
      *    ...,
      *    beforeInitGrid: function () {           //can be also put at: onInitGrid
      *        $(this).jqGrid('odataInit', {
-     *            version: 4,
+     *            version: 3,
      *            gencolumns: false,
      *            odataurl: 'http://localhost:56216/odata/ODClient'
      *        });
@@ -30,7 +30,7 @@
      *    beforeInitGrid: function () {
      *        $(this).jqGrid('odataInit', {
      *            version: 4,
-     *            async: false,
+     *            annotations: true,
      *            gencolumns: true,
      *            entityType: 'ClientModel',
      *            odataurl: 'http://localhost:56216/odata/ODClient',
@@ -141,7 +141,7 @@
             function setupWebServiceData(p, o, postData) {
                 // basic posting parameters to the OData service.
                 var params = {
-                    //$top: postData.rows, //- we cannot use $top because of it removes odata.nextLink parameter
+                    $top: postData.rows, //- $top removes odata.nextLink parameter
                     $skip: (parseInt(postData.page, 10) - 1) * p.rowNum,
                     $format: o.datatype
                     //$inlinecount: "allpages" //- not relevant for V4
@@ -149,7 +149,6 @@
 
                 //if (o.datatype === 'jsonp') { params.$callback = o.callback; }
                 if (o.count) { params.$count = true; }
-                if (o.top) { params.$top = postData.rows; }
                 if (o.inlinecount) { params.$inlinecount = "allpages"; }
 
                 // if we have an order-by clause to use, then we build it.
@@ -242,6 +241,7 @@
                 $.extend(p, {
                     serializeGridData: function (postData) {
                         postData = setupWebServiceData(p, o, postData);
+                        this.p.odataPostData = postData;
                         return postData;
                     },
                     ajaxGridOptions: defaultAjaxOptions,                   
@@ -253,9 +253,6 @@
                 if (o.datatype === 'xml') {
                     if (o.annotations) {
                         $.extend(true, p, {
-                            loadBeforeSend: function (jqXHR) {
-                                jqXHR.setRequestHeader("Prefer", 'odata.include-annotations="*"');
-                            },
                             //xmlReader: { ??? }
                         });
                     }
@@ -281,18 +278,22 @@
                             jsonReader: {
                                 root: "value",
                                 repeatitems: false,
-                                records: "odata.count",
+                                records: function (data) { return data["odata.count"] || data["@odata.count"]; },
                                 page: function (data) {
-                                    if (data["odata.nextLink"] !== undefined) {
-                                        var skip = data["odata.nextLink"].split('skip=')[1];
-                                        return Math.ceil(parseInt(skip, 10) / p.rowNum);
+                                    var skip;
+                                    if (data["odata.nextLink"]) {
+                                        skip = parseInt(data["odata.nextLink"].split('skip=')[1], 10);
                                     }
-
-                                    var total = data["odata.count"];
-                                    return Math.ceil(parseInt(total, 10) / p.rowNum);
+                                    else {
+                                        skip = p.odataPostData.$skip + p.rowNum;
+                                        var total = data["odata.count"] || data["@odata.count"];
+                                        if (skip > total) skip = total;
+                                    }
+                                    
+                                    return Math.ceil(skip / p.rowNum);
                                 },
                                 total: function (data) {
-                                    var total = data["odata.count"];
+                                    var total = data["odata.count"] || data["@odata.count"];
                                     return Math.ceil(parseInt(total, 10) / p.rowNum);
                                 },
                                 userdata: "userdata"
@@ -309,7 +310,9 @@
                 var o = $.extend(true, {
                     gencolumns: false,
                     odataurl: p.url,
-                    datatype: 'json'     //json,xml
+                    datatype: 'json',     //json,jsonp,xml
+                    annotations: false,
+                    annotationName: "@jqgrid.GridModelAnnotate",
                 }, options || {});
 
                 //xml dataType is not supported
@@ -317,20 +320,14 @@
 
                 if (!o.version || o.version < 4) {
                     o = $.extend(true, {
-                        annotations: false,
-                        annotationName: "",
                         inlinecount: true,
                         count: false,
-                        top: false
                     }, o || {});
                 }
                 else {
                     o = $.extend(true, {
-                        annotations: true,
-                        annotationName: "@jqgrid.GridModelAnnotate",
                         inlinecount: false,
                         count: true,
-                        top: true
                     }, o || {});
                 }
 
@@ -386,6 +383,10 @@
                 type: 'GET',
                 dataType: o.datatype,
                 contentType: 'application/' + o.datatype + ';charset=utf-8',
+                //headers: {
+                    //"OData-Version": "4.0"
+                    //"Accept": "application/json;odata=light;q=1,application/json;odata=verbose;q=0.5"
+                //},
                 async: o.async,
                 cache: false
             })

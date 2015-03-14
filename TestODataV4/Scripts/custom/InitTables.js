@@ -213,6 +213,7 @@ $(document).ready(function () {
             },
             beforeInitGrid: function () {
                 $(this).jqGrid('odataInit', {
+                    annotations: true,
                     version: 4,
                     gencolumns: true,
                     entityType: 'ClientModel',
