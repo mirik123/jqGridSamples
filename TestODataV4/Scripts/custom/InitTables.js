@@ -4,9 +4,15 @@
 $(document).ready(function () {
     function selectFormatter(cellvalue, options, rowObject) {
         if (!cellvalue) {
-            cellvalue = { Id: "-1", color: "transparent", descr: "" };
+            return '<span class="cellWithoutBackground" data-id="-1" style="background-color:transparent"></span>';
         }
-        else if (!$.isPlainObject(cellvalue)) {
+
+        if ($('#' + options.gid).getGridParam('datatype') === 'xml') {
+            var xmlvalue = $(options.colModel.name, rowObject);
+            cellvalue = gridODataHelpers.convertXmlToJson(xmlvalue[0]);
+        }
+
+        if (!$.isPlainObject(cellvalue)) {
             //var selRowId = $("#grid").jqGrid('getGridParam', 'selrow');
             var cell = $('tr#' + options.rowId + ' select[name=' + options.colModel.name + ']', '#grid');
 
@@ -64,7 +70,7 @@ $(document).ready(function () {
             {
                 label: 'Client Id', name: 'id', index: 'id', editable: false,
                 searchrules: { integer: true }, sorttype: 'number',
-                formatter: function (cellvalue, options, rowObject) { return '<a href="#" target="_self" data-id="' + rowObject.id + '">' + rowObject.id + '</a>'; },
+                formatter: function (cellvalue, options, rowObject) { return '<a href="#" target="_self" data-id="' + cellvalue + '">' + cellvalue + '</a>'; },
                 unformat: function (cellvalue, options, cell) { return $('a', cell).data('id'); }
             },
             { label: 'Last Name', name: 'lastname', index: 'lastname', editable: true },
@@ -85,11 +91,11 @@ $(document).ready(function () {
                 searchoptions: { dataUrl: '/api/ApiServices/GetSelectData?table=ClientType&empty=true' },
                 searchrules: { integer: true }, edittype: 'select', stype: 'select'
             },
+            { label: 'Cellphone', name: 'phone_cell', index: 'phone_cell', editable: true },
             { label: 'SSN', name: 'ssn', index: 'ssn', editable: true },
             { label: 'City', name: 'addr_city', index: 'addr_city', editable: true },
             { label: 'Street', name: 'addr_street', index: 'addr_street', editable: true },
-            { label: 'House', name: 'addr_home', index: 'addr_home', editable: true },
-            { label: 'Cellphone', name: 'phone_cell', index: 'phone_cell', editable: true }
+            { label: 'House', name: 'addr_home', index: 'addr_home', editable: true }            
         ];
 
         $("#grid").jqGrid({
@@ -101,7 +107,6 @@ $(document).ready(function () {
             sortorder: "asc",
             deepempty: true,
             altRows: true,
-            direction: 'rtl',
             footerrow: false,
             shrinkToFit: true,
             ignoreCase: true,
@@ -130,6 +135,14 @@ $(document).ready(function () {
             loadError: function (jqXHR, textStatus, errorThrown) {
                 var errstring = loadError(jqXHR, textStatus, errorThrown);
                 $.jgrid.info_dialog.call(this, $(this).jqGrid("getGridRes", "errors.errcap"), errstring, $(this).jqGrid("getGridRes", "edit.bClose"));
+            },
+            jsonReader: {
+                root: function (data) {
+                    var rows = data.rows.$values || data.rows;
+                    rows = gridODataHelpers.resolveJsonReferences(rows);
+                    return rows;
+                },
+                repeatitems: false
             }
         })
         .jqGrid("navGrid", "#pg_grid_toppager", { add: true, del: true, edit: true, view: true, reload: true, search: false, cloneToTop: true },
@@ -153,20 +166,22 @@ $(document).ready(function () {
         var colModelDefinition = [
             {
                 label: 'Client Id', name: 'id', index: 'id', editable: false, searchrules: { integer: true },
-                formatter: function (cellvalue, options, rowObject) { return '<a href="#" target="_self" data-id="' + rowObject.id + '">' + rowObject.id + '</a>'; },
+                formatter: function (cellvalue, options, rowObject) { return '<a href="#" target="_self" data-id="' + cellvalue + '">' + cellvalue + '</a>'; },
                 unformat: function (cellvalue, options, cell) { return $('a', cell).data('id'); }
             },         
             {
-                label: 'Client Type', name: 'cltype', index: 'cltype', editable: true,
+                label: 'Client Type', name: 'cltype', index: 'cltype', editable: true, //xmlmap: 'cltype > Id',
                 formatter: selectFormatter,
                 unformat: function (cellvalue, options, cell) { return $('span', cell).data('id'); },
                 editoptions: { dataUrl: '/api/ApiServices/GetSelectData?table=ClientType' },
                 searchoptions: { dataUrl: '/api/ApiServices/GetSelectData?table=ClientType&empty=true' },
                 searchrules: { integer: true }, edittype: 'select', stype: 'select',
-                odataunformat: function (searchField, searchString, searchOper) { if (searchString !== '-1') { return 'cltype/Id'; } }
+                odataunformat: function (searchField, searchString, searchOper) {
+                    if (searchString !== '-1') { return 'cltype/Id'; }
+                }
             },
             {
-                label: 'Client Status', name: 'status', index: 'status', editable: true,
+                label: 'Client Status', name: 'status', index: 'status', editable: true, //xmlmap: 'status > Id',
                 formatter: selectFormatter,
                 unformat: function (cellvalue, options, cell) { return $('span', cell).data('id'); },
                 editoptions: { dataUrl: '/api/ApiServices/GetSelectData?table=ClientStatus' },
@@ -214,6 +229,7 @@ $(document).ready(function () {
             beforeInitGrid: function () {
                 $(this).jqGrid('odataInit', {
                     annotations: true,
+                    datatype: 'json',
                     version: 4,
                     gencolumns: true,
                     entityType: 'ClientModel',

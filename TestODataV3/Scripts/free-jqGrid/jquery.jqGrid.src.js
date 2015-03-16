@@ -15,6 +15,9 @@
 /*jslint browser: true, devel: true, eqeq: true, evil: true, nomen: true, plusplus: true, regexp: true, unparam: true, todo: true, vars: true, white: true, maxerr: 999 */
 /*global jQuery, HTMLElement */
 
+
+
+
 (function ($) {
 "use strict";
 var englishLanguageDefaults = {
@@ -912,6 +915,7 @@ $.extend(true,jgrid,{
 		//$(expr, obj).filter(':last'); // we use ':last' to be more compatible with old version of jqGrid
 		return ret.length > 0 ? $(ret).text() : undefined;
 	},
+
 	cellWidth : function () {
 		var $testDiv = $("<div class='ui-jqgrid' style='left:10000px'><table class='ui-jqgrid-btable' style='width:5px;'><tr class='jqgrow'><td style='width:5px;display:block;'></td></tr></table></div>"),
 		testCell = $testDiv.appendTo("body")
@@ -2378,7 +2382,7 @@ $.fn.jqGrid = function( pin ) {
 						}
 					} else {
 						for(i = 0; i < f.length;i++) {
-							v = getXmlData( xmlr, f[i]);
+						    v = getXmlData(xmlr, f[i]);
 							rd[colModel[i+gi+si+ni].name] = v;
 							rowData.push( addCell(rid, v, i+gi+si+ni, j+rcnt, xmlr, rd) );
 						}
