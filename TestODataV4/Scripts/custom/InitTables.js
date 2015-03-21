@@ -9,7 +9,7 @@ $(document).ready(function () {
 
         if ($('#' + options.gid).getGridParam('datatype') === 'xml') {
             var xmlvalue = $(options.colModel.name, rowObject);
-            cellvalue = gridODataHelpers.convertXmlToJson(xmlvalue[0]);
+            cellvalue = $.jgrid.ODataHelper.convertXmlToJson(xmlvalue[0]);
         }
 
         if (!$.isPlainObject(cellvalue)) {
@@ -139,7 +139,7 @@ $(document).ready(function () {
             jsonReader: {
                 root: function (data) {
                     var rows = data.rows.$values || data.rows;
-                    rows = gridODataHelpers.resolveJsonReferences(rows);
+                    rows = $.jgrid.ODataHelper.resolveJsonReferences(rows);
                     return rows;
                 },
                 repeatitems: false

@@ -1,6 +1,18 @@
 ﻿/*jslint continue: true, nomen: true, plusplus: true, unparam: true, todo: true, vars: true, white: true */
 /*global jQuery */
 
+/*
+     * sample web site for Free-jqGrid OData project
+     * this code uses odata services from http://www.odata.org/odata-services
+     *
+     * Authors:
+     *  Mark Babayev (https://github.com/mirik123)
+     * 
+     * License MIT (MIT-LICENSE.txt)
+*/
+
+
+
 $(document).ready(function () {
     function selectFormatter(cellvalue, options, rowObject) {
         if (!cellvalue) {
@@ -63,103 +75,6 @@ $(document).ready(function () {
         errstring += "<div>Message: " + title + '</div><div>' + message + '</div>';
 
         return errstring;
-    }
-
-    function initWebApiTable() {
-        var colModelDefinition = [
-            {
-                label: 'Client Id', name: 'id', index: 'id', editable: false,
-                searchrules: { integer: true }, sorttype: 'number',
-                formatter: function (cellvalue, options, rowObject) { return '<a href="#" target="_self" data-id="' + cellvalue + '">' + cellvalue + '</a>'; },
-                unformat: function (cellvalue, options, cell) { return $('a', cell).data('id'); }
-            },
-            { label: 'Last Name', name: 'lastname', index: 'lastname', editable: true },
-            { label: 'First Name', name: 'firstname', index: 'firstname', editable: true },
-            {
-                label: 'Client Status', name: 'status', index: 'status', editable: true,
-                formatter: selectFormatter,
-                unformat: function (cellvalue, options, cell) { return $('span', cell).data('id'); },
-                editoptions: { dataUrl: '/api/ApiServices/GetSelectData?table=ClientStatus' },
-                searchoptions: { dataUrl: '/api/ApiServices/GetSelectData?table=ClientStatus&empty=true' },
-                searchrules: { integer: true }, edittype: 'select', stype: 'select'
-            },
-            {
-                label: 'Client Type', name: 'cltype', index: 'cltype', editable: true,
-                formatter: selectFormatter,
-                unformat: function (cellvalue, options, cell) { return $('span', cell).data('id'); },
-                editoptions: { dataUrl: '/api/ApiServices/GetSelectData?table=ClientType' },
-                searchoptions: { dataUrl: '/api/ApiServices/GetSelectData?table=ClientType&empty=true' },
-                searchrules: { integer: true }, edittype: 'select', stype: 'select'
-            },
-            { label: 'Cellphone', name: 'phone_cell', index: 'phone_cell', editable: true },
-            { label: 'SSN', name: 'ssn', index: 'ssn', editable: true },
-            { label: 'City', name: 'addr_city', index: 'addr_city', editable: true },
-            { label: 'Street', name: 'addr_street', index: 'addr_street', editable: true },
-            { label: 'House', name: 'addr_home', index: 'addr_home', editable: true }            
-        ];
-
-        $("#grid").jqGrid({
-            height: '100%',
-            width: '100%',
-            pager: $('#gridpager'),
-            sortname: 'id',
-            viewrecords: true,
-            sortorder: "asc",
-            deepempty: true,
-            altRows: true,
-            footerrow: false,
-            shrinkToFit: true,
-            ignoreCase: true,
-            gridview: true,
-            headertitles: true,
-            sortable: true,
-            autowidth: true,
-            toppager: true,
-            rowNum: 25,
-            toolbar: [true, 'top'],
-            datatype: 'json',
-            contentType: "application/json;charset=utf-8",
-            mtype: 'GET',
-            url: 'http://localhost:59661/api/ApiServices/Get1',
-            ondblClickRow: function (id) {
-                $(this).jqGrid('editRow', id, {
-                    beforeEditRow: function (options, rowid) {
-                        return true;
-                    }
-                });
-                $("#grid_ilsave").removeClass('ui-state-disabled');
-            },
-            multiSort: true,
-            iconSet: "jQueryUI",
-            colModel: colModelDefinition,
-            loadError: function (jqXHR, textStatus, errorThrown) {
-                var errstring = loadError(jqXHR, textStatus, errorThrown);
-                $.jgrid.info_dialog.call(this, $(this).jqGrid("getGridRes", "errors.errcap"), errstring, $(this).jqGrid("getGridRes", "edit.bClose"));
-            },
-            jsonReader: {
-                root: function (data) {
-                    var rows = data.rows.$values || data.rows;
-                    rows = $.jgrid.ODataHelper.resolveJsonReferences(rows);
-                    return rows;
-                },
-                repeatitems: false
-            }
-        })
-        .jqGrid("navGrid", "#pg_grid_toppager", { add: true, del: true, edit: true, view: true, reload: true, search: false, cloneToTop: true },
-            {
-                closeAfterEdit: true
-            },
-            {
-                closeAfterAdd: true
-            })
-        .jqGrid('inlineNav', "#pg_grid_toppager", {
-            add: true, edit: false, save: true, cancel: false,
-            editParams: {
-                keys: true
-            }
-        })
-        .jqGrid('filterToolbar', { searchOnEnter: false, enableClear: false, stringResult: true })
-        .jqGrid('searchGrid', { multipleSearch: true, multipleGroup: false, overlay: 0 });
     }
 
     function initODataTable() {
@@ -228,13 +143,13 @@ $(document).ready(function () {
             },
             beforeInitGrid: function () {
                 $(this).jqGrid('odataInit', {
-                    annotations: false,
-                    datatype: 'xml',
-                    version: 3,
+                    annotations: true,
+                    datatype: 'json',
+                    version: 4,
                     gencolumns: true,
                     entityType: 'ClientModel',
-                    odataurl: "http://localhost:59661/odata/ODClient",
-                    metadataurl: 'http://localhost:59661/odata/$metadata',
+                    odataurl: "http://localhost:56216/odata/ODClient",
+                    metadataurl: 'http://localhost:56216/odata/$metadata',
                     errorfunc: function (jqXHR, textStatus, errorThrown) {
                         jqXHR = jqXHR.xhr || jqXHR;
                         var $this = $("#grid");
@@ -262,5 +177,4 @@ $(document).ready(function () {
     }
 
     initODataTable();
-    //initWebApiTable();
 });
