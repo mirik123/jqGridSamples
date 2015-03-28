@@ -1,4 +1,38 @@
-﻿using Microsoft.OData.Core;
+/**
+ * jqGrid server-side extension for Web Api OData v4
+ * Copyright (c) 2014-2015, Mark Babayev
+ * MIT license:
+ * http://www.opensource.org/licenses/mit-license.php
+ *
+ *The class chould be registered this way:
+ *config.MapODataServiceRoute(
+ *	routeName: "odata",
+ *	routePrefix: "odata",
+ *	model: edmmodel,
+ *	defaultHandler: new jqGridODataHandler(GlobalConfiguration.Configuration)
+ *);
+ *           
+ *var list = ODataMediaTypeFormatters.Create();
+ *config.Formatters.InsertRange(0, list);
+ *config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+ *jqGridODataHelper.Register(config);
+ *
+ *Finally it adds some annotations to odata responce:
+ *{
+ *	"@odata.context":"http://localhost:56215/odata/$metadata#ODClient",
+ *	"@odata.count":32,
+ *	"@jqgrid.GridModelAnnotate":{
+ *    		"@odata.type":"#jqGridExtension.GridModelAnnotate",
+ *		"page":1,
+ *		"records":32,
+ *		"total":2,
+ *		"userdata":"{\"key\":\"value\"}"
+ *  	},
+ *	"value":[...]
+ *}
+**/ 
+
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using System;
 using System.Collections;
