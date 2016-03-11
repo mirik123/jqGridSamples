@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestODataV4", "TestODataV4\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestODataV3", "TestODataV3\TestODataV3.csproj", "{8CD1F3E8-D39D-4AE2-B769-597C61F8090C}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "TestODataExternal", "TestODataExternal", "{6A6C4F64-FC8D-4835-B41A-52CAFBEE5834}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "TestODataExternal", "TestODataExternal\", "{6A6C4F64-FC8D-4835-B41A-52CAFBEE5834}"
 	ProjectSection(WebsiteProperties) = preProject
 		SccProjectName = "SAK"
 		SccAuxPath = "SAK"
@@ -29,24 +29,13 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "TestODataExternal", "TestOD
 		VWDPort = "56138"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jqGridWebApiTemplate", "jqGridWebApiTemplate\jqGridWebApiTemplate.csproj", "{1D480030-C246-454E-BB28-11F53D71DB53}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2588282E-B284-4076-8490-0A2CB2FF8688}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jqGridWebApiProject", "jqGridWebApiProject\jqGridWebApiProject.csproj", "{C58EF75B-BEA6-4766-80A0-1A44D5F165B3}"
+EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://mmmprojects.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = TestODataV3\\TestODataV3.csproj
-		SccProjectName1 = TestODataV3
-		SccLocalPath1 = TestODataV3
-		SccProjectUniqueName2 = TestODataV4\\TestODataV4.csproj
-		SccProjectName2 = TestODataV4
-		SccLocalPath2 = TestODataV4
-		SccWebProject3 = true
-		SccProjectUniqueName3 = TestODataExternal
-		SccProjectName3 = TestODataExternal
-		SccLocalPath3 = TestODataExternal
-		SccProjectEnlistmentChoice3 = 2
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -64,6 +53,14 @@ Global
 		{6A6C4F64-FC8D-4835-B41A-52CAFBEE5834}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A6C4F64-FC8D-4835-B41A-52CAFBEE5834}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A6C4F64-FC8D-4835-B41A-52CAFBEE5834}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{1D480030-C246-454E-BB28-11F53D71DB53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D480030-C246-454E-BB28-11F53D71DB53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D480030-C246-454E-BB28-11F53D71DB53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D480030-C246-454E-BB28-11F53D71DB53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C58EF75B-BEA6-4766-80A0-1A44D5F165B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C58EF75B-BEA6-4766-80A0-1A44D5F165B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C58EF75B-BEA6-4766-80A0-1A44D5F165B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C58EF75B-BEA6-4766-80A0-1A44D5F165B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -34,7 +34,7 @@ namespace WebApplication2.odata
                         addr_home = x.client.addr_home
                     });
 
-            Request.Properties["userdata"] = Newtonsoft.Json.JsonConvert.SerializeObject(new { key = "value" });
+            Request.Properties["userdata"] = new { key = "value" };
 
             return model;
         }

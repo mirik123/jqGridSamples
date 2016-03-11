@@ -59,7 +59,7 @@ namespace WebApplication2.api
                         addr_home = x.client.addr_home
                     });
 
-            return jqGridHelper.ApplyJqGridFilters(model, grid, null);
+            return jqGridHelper.ApplyJqGridFilters(model, grid, new { });
         }
 
         [HttpGet]
@@ -82,6 +82,8 @@ namespace WebApplication2.api
                         addr_street = x.client.addr_street,
                         addr_home = x.client.addr_home
                     });
+
+            Request.Properties["userdata"] = new { };
 
             return model;
         }

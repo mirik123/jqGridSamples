@@ -38,6 +38,8 @@ namespace WebApplication2
             var list = ODataMediaTypeFormatters.Create();
             config.Formatters.InsertRange(0, list);
             config.IncludeErrorDetailPolicy = IncludeErrorDetailPolicy.Always;
+
+            //config.Formatters.XmlFormatter.UseXmlSerializer = true;
         }
     }
 }

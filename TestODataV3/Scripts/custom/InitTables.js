@@ -9,7 +9,7 @@ $(document).ready(function () {
 
         if ($('#' + options.gid).getGridParam('datatype') === 'xml') {
             var xmlvalue = $(options.colModel.name, rowObject);
-            cellvalue = $.jgrid.ODataHelper.convertXmlToJson(xmlvalue[0]);
+            cellvalue = $.jgrid.odataHelper.convertXmlToJson(xmlvalue[0]);
         }
 
         if (!$.isPlainObject(cellvalue)) {
@@ -139,7 +139,7 @@ $(document).ready(function () {
             jsonReader: {
                 root: function (data) {
                     var rows = data.rows.$values || data.rows;
-                    rows = $.jgrid.ODataHelper.resolveJsonReferences(rows);
+                    rows = $.jgrid.odataHelper.resolveJsonReferences(rows);
                     return rows;
                 },
                 repeatitems: false
@@ -232,7 +232,9 @@ $(document).ready(function () {
                     datatype: 'xml',
                     version: 3,
                     gencolumns: true,
+                    expandable: 'json',
                     entityType: 'ClientModel',
+                    useXmlSerializer: false,
                     odataurl: "http://localhost:59661/odata/ODClient",
                     metadataurl: 'http://localhost:59661/odata/$metadata',
                     errorfunc: function (jqXHR, textStatus, errorThrown) {

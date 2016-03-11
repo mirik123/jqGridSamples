@@ -1,4 +1,11 @@
-﻿using System;
+﻿/**
+ * jqGrid server-side extension for Web Api
+ * Copyright (c) 2014-2015, Mark Babayev
+ * MIT license:
+ * http://www.opensource.org/licenses/mit-license.php
+**/ 
+
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,7 +19,7 @@ using System.Web.Http.ModelBinding;
 
 namespace jqGridExtension
 {
-    public class jqGridHelper
+    public static class jqGridHelper
     {
         public static GridModel ApplyJqGridFilters<T>(IQueryable<T> model, GridSettings grid, dynamic userdata = null) where T: class
         {
@@ -91,13 +98,11 @@ namespace jqGridExtension
         private T GetValue<T>(ModelBindingContext bindingContext, string key, T defaulValue)
         {
             var valueResult = bindingContext.ValueProvider.GetValue(key);
-            if (valueResult != null)
-            {
-                bindingContext.ModelState.SetModelValue(key, valueResult);
-                return (T)valueResult.ConvertTo(typeof(T));
-            }
-            else
+            if (valueResult == null)
                 return defaulValue;
+            
+            bindingContext.ModelState.SetModelValue(key, valueResult);
+            return (T)valueResult.ConvertTo(typeof(T));
         }  
     }
 
@@ -321,7 +326,6 @@ namespace jqGridExtension
     {
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-            object responseObject;
             if (ResponseIsValid(actionExecutedContext.Response))
             {
                 GridSettings grid;
@@ -347,21 +351,23 @@ namespace jqGridExtension
                     throw new HttpResponseException(actionExecutedContext.Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
                 }
 
+                dynamic oUserData;
+                if (!actionExecutedContext.Request.Properties.TryGetValue("userdata", out oUserData))
+                    oUserData = new { };
+
+                object responseObject;
                 actionExecutedContext.Response.TryGetContentValue(out responseObject);
                 if (responseObject is IQueryable)
                 {
-                    var robj = jqGridHelper.ApplyJqGridFilters(responseObject as IQueryable<object>, grid);
-                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.OK, robj);
+                    GridModel robj = jqGridHelper.ApplyJqGridFilters(responseObject as IQueryable<object>, grid, oUserData);
+                    actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse<GridModel>(HttpStatusCode.OK, robj);
                 }
             }
         }
 
         private bool ResponseIsValid(HttpResponseMessage response)
         {
-            if (response == null || response.StatusCode != HttpStatusCode.OK || !(response.Content is ObjectContent))
-                return false;
-            else
-                return true;
+            return response != null && response.StatusCode == HttpStatusCode.OK && response.Content is ObjectContent;
         }
     }
 }

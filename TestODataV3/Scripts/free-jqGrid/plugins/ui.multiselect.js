@@ -1,5 +1,5 @@
-/*
- * jQuery UI Multiselect
+/**
+ * @license jQuery UI Multiselect
  *
  * Authors:
  *  Michael Aufreiter (quasipartikel.at)
@@ -24,8 +24,19 @@
  *  Implement dynamic insertion through remote calls
  */
 
-
-(function($) {
+(function (factory) {
+	"use strict";
+	if (typeof define === "function" && define.amd) {
+		// AMD. Register as an anonymous module.
+		define(["jquery", "./jqdnr", "./jqmodal"], factory);
+	} else if (typeof exports === "object") {
+		// Node/CommonJS
+		factory(require("jquery"));
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function($) {
 
 $.widget("ui.multiselect", {
   options: {
@@ -163,7 +174,7 @@ $.widget("ui.multiselect", {
 	},
 	_getOptionNode: function(option) {
 		option = $(option);
-		var node = $('<li class="ui-state-default ui-element" title="'+option.text()+'"><span class="ui-icon"/>'+option.text()+'<a href="#" class="action"><span class="ui-corner-all ui-icon"/></a></li>').hide();
+		var node = $('<li class="ui-state-default ui-element" title="'+(option.attr("title") || option.text())+'"><span class="ui-icon"/>'+option.text()+'<a href="#" class="action"><span class="ui-corner-all ui-icon"/></a></li>').hide();
 		node.data('optionLink', option);
 		return node;
 	},
@@ -339,4 +350,4 @@ $.extend($.ui.multiselect, {
 });
 
 
-})(jQuery);
+}));

@@ -21,7 +21,7 @@ $(document).ready(function () {
 
         if ($('#' + options.gid).getGridParam('datatype') === 'xml') {
             var xmlvalue = $(options.colModel.name, rowObject);
-            cellvalue = $.jgrid.ODataHelper.convertXmlToJson(xmlvalue[0]);
+            cellvalue = $.jgrid.odataHelper.convertXmlToJson(xmlvalue[0]);
         }
 
         if (!$.isPlainObject(cellvalue)) {

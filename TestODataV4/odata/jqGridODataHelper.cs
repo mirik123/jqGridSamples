@@ -73,7 +73,7 @@ namespace jqGridExtension
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             return base.SendAsync(request, cancellationToken).ContinueWith(
-                (task) =>
+                task =>
                 {
                     var response = task.Result;
                     IEnumerable<string> headers;
@@ -81,7 +81,8 @@ namespace jqGridExtension
                         response.Content.Headers.Add("Preference-Applied", headers);
 
                     return response;
-                }
+                },
+                cancellationToken
             );
         }
     }
@@ -99,11 +100,7 @@ namespace jqGridExtension
         {
             var serializer = base.GetEdmTypeDeserializer(edmType);
             var feedSerializer = serializer as ODataFeedDeserializer;
-            if (feedSerializer != null)
-            {
-                return _feedSerializer;
-            }
-            return serializer;
+            return feedSerializer != null ? _feedSerializer : serializer;
         }
     }
 
@@ -134,11 +131,7 @@ namespace jqGridExtension
         {
             var serializer = base.GetEdmTypeSerializer(edmType);
             var feedSerializer = serializer as ODataFeedSerializer;
-            if (feedSerializer != null)
-            {
-                return _feedSerializer;
-            }
-            return serializer;
+            return feedSerializer != null ? _feedSerializer : serializer;
         }
     }
 
@@ -155,17 +148,18 @@ namespace jqGridExtension
 
             if (feedInstance != null)
             {
-                int skip = 0;
-                object oPageSize, oUserData;
-
                 var options = writeContext.Request.RequestUri.ParseQueryString();
+                int skip;
                 int.TryParse(options["$skip"], out skip); 
 
-                writeContext.Request.Properties.TryGetValue("PageSize", out oPageSize);
-                writeContext.Request.Properties.TryGetValue("userdata", out oUserData);
-
-                var iPageSize = oPageSize == null ? 0 : (int)oPageSize;
-                var sUserData = oUserData as string ?? "{}";
+                object oPageSize, oUserData;
+                int iPageSize = 0;
+                if (writeContext.Request.Properties.TryGetValue("PageSize", out oPageSize))
+                    iPageSize = (int)oPageSize;
+					
+                string sUserData = "{}";
+                if (writeContext.Request.Properties.TryGetValue("userdata", out oUserData))
+                    sUserData = Newtonsoft.Json.JsonConvert.SerializeObject(oUserData);
 
                 var records = (int)feed.Count.GetValueOrDefault(0);
                 //var records = writeContext.Request.ODataProperties().TotalCount;
@@ -177,10 +171,10 @@ namespace jqGridExtension
                     TypeName = "jqGridExtension.GridModelAnnotate",
                     Properties = new List<ODataProperty>
                     {
-                        new ODataProperty() { Name = "page", Value = page },
-                        new ODataProperty() { Name = "records", Value = records },
-                        new ODataProperty() { Name = "total", Value = total },
-                        new ODataProperty() { Name = "userdata", Value = sUserData }
+                        new ODataProperty { Name = "page", Value = page },
+                        new ODataProperty { Name = "records", Value = records },
+                        new ODataProperty { Name = "total", Value = total },
+                        new ODataProperty { Name = "userdata", Value = sUserData }
                     }
                 };
 
