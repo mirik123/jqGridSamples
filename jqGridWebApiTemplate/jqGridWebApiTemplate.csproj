@@ -158,6 +158,7 @@
     <Content Include="Content\ui.jqgrid.min.css" />
     <Content Include="Default.html" />
     <Content Include="Global.asax" />
+    <Content Include="MIT-LICENSE.txt" />
     <Content Include="Scripts\InitJqGrid.js" />
     <Content Include="Utilities\jqGridExtension.readme.txt" />
     <Content Include="Scripts\free-jqGrid\i18n\grid.locale-ar.js" />
